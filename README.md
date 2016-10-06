@@ -1,7 +1,7 @@
-### Getting started
+## Getting started
 Integrating inBeacon in an Android Studio project
 
-##JCenter (recommended)
+###JCenter (recommended)
 Add JCenter to your build file's list of repositories, and include
 ```
 dependencies {
@@ -13,7 +13,7 @@ https://bintray.com/inbeacon/maven/android.sdk/view
 
 You can use a dynamic version (1.+) to get the latest 1.x version of the SDK (recommended)
 
-##Binary release
+###Binary release
 If you don’t want to use the JCenter repository, you can download and include all files manually.
 The inBeacon SDK .aar is included in the download package from console.inbeacon.nl along with the example.
 To include the .aar in your android studio project, copy the aar file to the app/libs directory and include:
