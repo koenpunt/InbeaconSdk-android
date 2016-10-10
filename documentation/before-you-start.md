@@ -37,9 +37,7 @@ If the app is updated and did not yet have permission for one of the bluetooth v
 
 >Permissions are asked during use of the app. In the "read more" section, it is mentioned that the app “shares location” because of the extra COARSE_LOCATION permission requirement.
 
-![image alt text](image_1.png)
-
-And in the "permission details" menu, it is mentioned that the app can use bluetooth functionaties and run at startup. However this list must requested by the user and is not shown upon install by default.
+>And in the "permission details" menu, it is mentioned that the app can use bluetooth functionaties and run at startup. However this list must requested by the user and is not shown upon install by default.
 
 ![image alt text](image_2.png)
 
