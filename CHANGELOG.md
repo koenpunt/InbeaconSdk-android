@@ -1,3 +1,7 @@
+#### 1.6.4 (10-Oct-2016)
+- markdown documentation in repository
+- example in repository
+
 #### 1.6.3 (10-Oct-2016)
 - test 
 
