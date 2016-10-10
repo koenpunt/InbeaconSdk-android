@@ -1,3 +1,14 @@
+There are 4 sdk methods that are required for normal inBeacon integration: 
+
+* initialize
+* attach a user
+* detach a user
+* refresh
+
+Additional methods exist, but they are not required for normal operation. 
+
+Also you can receive LocalBroadcasts for specific events, but these are also not required for normal operation.
+
 ## Sample app
 
 You will find a sample Android Studio project in the SDK download package, and on github:
@@ -63,3 +74,59 @@ protected void onCreate(Bundle savedInstanceState) {
 
 Notice that even if you close the app or force-close the app, the inBeacon SDK service will restart at the moment you plug in or remove your charger or reboot the device. This means that Beacons that you define in the inBeacon backend are detected even if the user has put the app in the background or terminated the app. 
 
+## SDK 23 - getting Permission
+
+If you do not want to use the bare-bones **askPermissions** method provided by the SDK, you can roll your own. You might use this example code to make a more advanced permission request:
+
+```java
+public class myActivity extends Activity  { 
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		...
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+		   // Android M Permission check 
+		   if (this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+		       final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		       builder.setTitle("This app needs location access");
+		       builder.setMessage("Please grant location access so this app can detect beacons.");
+		       builder.setPositiveButton(android.R.string.ok, null);
+		       builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+		           @Override
+		           public void onDismiss(DialogInterface dialog) {
+		               requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
+		           }
+		       });
+		       builder.show();
+		   }
+		}
+		..
+	}
+	@Override
+	public void onRequestPermissionsResult(int requestCode,
+	                                      String permissions[], int[] grantResults) {
+	   switch (requestCode) {
+	       case PERMISSION_REQUEST_COARSE_LOCATION: {
+	           if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+	               Log.d(TAG, "coarse location permission granted");
+	           } else {
+	               final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	               builder.setTitle("Functionality limited");
+	               builder.setMessage("Since location access has not been granted, this app will not be able to discover beacons when in the background.");
+	               builder.setPositiveButton(android.R.string.ok, null);
+	               builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+	
+	                   @Override
+	                   public void onDismiss(DialogInterface dialog) {
+	                   }
+	
+	               });
+	               builder.show();
+	           }
+	           return;
+	       }
+	   }
+	}
+	…
+}
+```
