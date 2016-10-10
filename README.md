@@ -1,36 +1,77 @@
+## Documentation
+
+Read the [full documentation](documentation/README.md)
+
 ## Getting started
-Integrating inBeacon in an Android Studio project
+Minimal implementation of the inBeacon SDK in an Android Studio project
 
-###JCenter (recommended)
+### Get the SDK from JCenter (recommended)
 Add JCenter to your build file's list of repositories, and include
-```
+
+```groovy
 dependencies {
-    compile('com.inbeacon:android.sdk:1.+@aar'){ transitive = true }
+	compile('com.inbeacon:android.sdk:1.+@aar'){ transitive = true }
 }
 ```
-to your gradle dependencies. See bintray for details:
-https://bintray.com/inbeacon/maven/android.sdk/view
+to your gradle dependencies.
 
-You can use a dynamic version (1.+) to get the latest 1.x version of the SDK (recommended)
+### Create an Application class
+You need to create your own **application class** to enable working with the inBeacon SDK.
+> You can't initialize in an activity: the SDK will not work correctly in the background in this case
 
-###Binary release
-If you don’t want to use the JCenter repository, you can download and include all files manually.
-The inBeacon SDK .aar is included in the download package from console.inbeacon.nl along with the example.
-To include the .aar in your android studio project, copy the aar file to the app/libs directory and include:
-```
-repositories {
- flatDir {
- dirs 'libs'
- }
+In this class, initialize the inBeacon SDK from the onCreate of the application:
+
+```java
+import android.app.Application;
+import com.inbeacon.sdk.InbeaconManager;
+import java.util.HashMap;
+
+public class myApp extends Application {
+
+   @Override
+	public void onCreate() {
+
+       super.onCreate();
+
+		// initialize with your ClientID and Secret.
+		InbeaconManager.initialize(this, "<<your client Id>>", "<<client Secret>>");
+
+		// refresh data from server. 
+		InbeaconManager.getSharedInstance().refresh();
+   }
 }
-compile 'com.android.support:support-v4:22.2.0'
-compile 'org.altbeacon:android-beacon-library:2.8.1'
-compile 'com.loopj.android:android-async-http:1.4.9'
-compile(name:'android.sdk-release', ext:'aar')
+```
+You can find your client-ID and client-Secret in your [account overview](http://console.inbeacon.nl/accmgr) 
+
+Now you have to make sure `MyApp` is used as the application class by adding it to your `AndroidManifest.xml`:
+
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.inbeacon.inbeaconsdkaartest" >
+
+    <application android:name=".MyApp">
+		...
+    </application>
+
+</manifest>
 ```
 
-In this case you need to specify some dependencies by hand.
-Now you are set to go. Try to compile and see that your app is still working. Now you need to add some code to start
-the inBeacon SDK.
+## ask permission to use location 
+You also need to ask the user permission to use the device COARSE_LOCATION. For convenience, the inBeacon SDK contains a method **askPermissions** to do this. 
+
+> for SDK 23 and up only
+
+Include this statement in your main activity:
+
+```java
+public class MyActivity extends Activity  { 
+
+@Override
+
+protected void onCreate(Bundle savedInstanceState) {
+		...
+		InbeaconManager.getSharedInstance().askPermissions(this);
+
+```
+
 
 
