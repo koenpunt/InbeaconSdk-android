@@ -47,11 +47,9 @@ Now you have to make sure `MyApp` is used as the application class by adding it 
 
 ```xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.inbeacon.inbeaconsdkaartest" >
-
-    <application android:name=".MyApp">
+    <application android:name=".MyApp">  <!-- add android:name -->
 		...
     </application>
-
 </manifest>
 ```
 
@@ -64,14 +62,13 @@ Include this statement in your main activity:
 
 ```java
 public class MyActivity extends Activity  { 
-
 @Override
-
 protected void onCreate(Bundle savedInstanceState) {
 		...
 		InbeaconManager.getSharedInstance().askPermissions(this);
-
+		...
 ```
 
+For details see  the [full documentation](documentation/README.md)
 
 
