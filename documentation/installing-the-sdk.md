@@ -2,7 +2,18 @@
 
 ### JCenter (recommended)
 
-Add JCenter to your build file's list of repositories, and include
+Add JCenter and the inbeacon repository to your build file's list of repositories:
+
+```groovy
+    repositories {
+        jcenter()
+        maven { url "https://dl.bintray.com/inbeacon/maven" }
+        ..
+    }
+```
+> you can have more than one maven {url ..} line  in your repositories list
+
+Now include:    
 
 ```groovy
 dependencies {
@@ -11,7 +22,8 @@ dependencies {
 ```
 to your gradle dependencies. See bintray for details: [https://bintray.com/inbeacon/maven/android.sdk/view](https://bintray.com/inbeacon/maven/android.sdk/view)
 
-You can use a dynamic version (1.+) to get the latest 1.x version of the SDK (recommended)
+You can use a dynamic version (1.+) to get the latest 1.x version of the SDK (recommended) 
+>Don't forget transitive = true. Because we specify @aar, transitive no longer defaults to true
 
 ### Binary release 
 
