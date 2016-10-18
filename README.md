@@ -12,11 +12,8 @@ Add JCenter and the inbeacon repository to your build file's list of repositorie
     repositories {
         jcenter()
         maven { url "https://dl.bintray.com/inbeacon/maven" }
-        maven { url "..other repositories.." }
-        ..
     }
 ```
-
 
 then include
 
