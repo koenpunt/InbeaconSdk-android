@@ -1,3 +1,6 @@
+#### 1.7.1 (20-Oct-2016)
+- Logging which device params are used 
+
 #### 1.7.0 (20-Oct-2016)
 - New distance calculation method
 - Device parameter database now hosted by inbeacon
