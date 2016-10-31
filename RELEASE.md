@@ -1,2 +1,3 @@
-#### 1.7.1 (20-Oct-2016)
-- Logging which device params are used 
+#### 1.7.2 (31-Oct-2016)
+- Examples streamlined with 1.7 version
+ 

@@ -39,12 +39,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // convenience method. Use your own if you want to.
-        InbeaconManager.getSharedInstance().askPermissions(this);   // android M and up: ask COARSE_LOCATION
-
-        // lets refresh every time the activity becomes active. Need to do this once in a while, so just do it here.
-        InbeaconManager.getSharedInstance().refresh();
-
         // lets see if the device is capable.
         VerifiedCapability verifiedCaps=InbeaconManager.getSharedInstance().verifyCapabilities();
         if (verifiedCaps!=VerifiedCapability.CAP_OK) {

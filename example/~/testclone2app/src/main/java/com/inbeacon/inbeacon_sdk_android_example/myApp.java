@@ -10,8 +10,7 @@ public class myApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        // These are valid credentials for the inbeacon "demo" account, so this app will run.
-        // initialize with YOUR ClientID and Secret!
+        // initialize with your ClientID and Secret.
         InbeaconManager.initialize(this, "demo", "QmE3WWlMNUluUnp2Y2h1MUF4NFpJQ01aZ2ZCRnVGbng");
         //
         // If you have user credentials somewhere in your app, you can attach the account

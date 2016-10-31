@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.2"
 
     defaultConfig {
         applicationId "com.inbeacon.inbeacon_sdk_android_example"
-        minSdkVersion 8
-        targetSdkVersion 22
-        versionCode 2
-        versionName "1.1"
+        minSdkVersion 18
+        targetSdkVersion 24
+        versionCode 3
+        versionName "1.1.2"
     }
     buildTypes {
         release {
@@ -23,25 +23,9 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-        //  repository via bintray directly
-        //        repositories {
-        //            maven {
-        //                url 'https://dl.bintray.com/inbeacon/maven'
-        //            }
-        //        }
-        // repository via jcenter
-        // use latest 1.x version
-        compile('com.inbeacon:android.sdk:1.+@aar'){ transitive = true }
+    // see SDK documentation for more information
+    // https://github.com/inbeacon/InbeaconSdk-android/blob/master/documentation/installing-the-sdk.md
 
+    compile('com.inbeacon:android.sdk:1.+@aar'){ transitive = true }
 
-        //     local repository in app/libs
-        //        repositories {
-        //            flatDir {
-        //                dirs 'libs'
-        //            }
-        //        }
-        //        compile 'com.android.support:support-v4:22.2.0'
-        //        compile 'org.altbeacon:android-beacon-library:2.1.4'
-        //        compile 'com.loopj.android:android-async-http:1.4.7'
-        //        compile(name:'android.sdk-release', ext:'aar')
 }
