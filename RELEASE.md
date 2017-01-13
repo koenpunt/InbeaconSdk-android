@@ -1,3 +1,3 @@
-#### 1.7.2 (31-Oct-2016)
-- Examples streamlined with 1.7 version
+#### 1.7.3 (13-Jan-2017)
+- upstream merge with altbeacon library 2.9.2
  
