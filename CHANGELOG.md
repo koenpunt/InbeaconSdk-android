@@ -1,3 +1,7 @@
+#### 2.0.2 (06-Feb-2017)
+- some minor issues solved
+
+
 #### 2.0.1 (06-Feb-2017)
 - Uses V5 API with host
 - Locations and Geofences now use play-services-location
