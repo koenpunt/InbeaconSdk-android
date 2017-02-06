@@ -10,8 +10,25 @@ For the SDK to work, the app needs the following (extra) permissions:
 * `BLUETOOTH_ADMIN`
 * `RECEIVE_BOOT_COMPLETED`
 * `ACCESS_COARSE_LOCATION`  (api 23 / android 6 only)
+* `ACCESS_FINE_LOCATION` (for geofences)
 
 How these permissions impact installation and use of the app differs per android version and per targeted API of the app.
+
+#### Android 6 and higher
+* Android versions 6 (marshmallow) and up
+* **AND** with apps targeted at API versions 23 onwards
+
+>Installs and updates for the these apps are done without asking for permissions. 
+
+>Permissions are asked during use of the app. In the "read more" section, it is mentioned that the app “shares location” because of the extra COARSE\_LOCATION / FINE\_LOCATION permission requirement.
+
+>And in the "permission details" menu, it is mentioned that the app can use bluetooth functionaties and run at startup. However this list must requested by the user and is not shown upon install by default.
+
+![image alt text](image_2.png)
+
+When the app is run, permission for `COARSE_LOCATION` (or `FINE_LOCATION`) needs to be requested in order to detect beacons:
+
+![image alt text](image_3.png)
 
 #### Older android versions
 * Android versions 5 (lollipop) and lower 
@@ -23,27 +40,12 @@ Also, on android 6, older apps targeted for API versions 22 and lower will have 
 	
 ##### Installation
 	
-On installation, the app asks for the extra permission "Bluetooth" 
-	
+On installation, the app asks for the extra permission "Bluetooth" 	
 ##### App update
 	
 If the app is updated and did not yet have permission for one of the bluetooth values, the app is **NOT** automatically updated because of the extra permission needed. Updating leads to the following question
 
-#### Android 6 and higher
-* Android versions 6 (marshmallow) and up
-* **AND** with apps targeted at API versions 23 onwards
 
->Installs and updates for the these apps are done without asking for permissions. 
-
->Permissions are asked during use of the app. In the "read more" section, it is mentioned that the app “shares location” because of the extra COARSE_LOCATION permission requirement.
-
->And in the "permission details" menu, it is mentioned that the app can use bluetooth functionaties and run at startup. However this list must requested by the user and is not shown upon install by default.
-
-![image alt text](image_2.png)
-
-When the app is run, permission for `COARSE_LOCATION` (or `FINE_LOCATION`) needs to be requested in order to detect beacons:
-
-![image alt text](image_3.png)
 
 ## App in the background and locked (screen off) devices
 
@@ -79,8 +81,9 @@ The number of methods used by the inBeaconSDK is 793 methods (version 1.3.4)
 
 This is excluding the dexcount of the dependencies as they will probably already be used:
 
-* com.android.support:support-v4
-* com.loopj.android:android-async-http
+ *   com.google.code.gson:gson
+ *   com.squareup.okhttp3:okhttp  (dependency of retrofit)
+ *   com.google.android.gms:play-services-location
 
 ## Memory footprint
 
