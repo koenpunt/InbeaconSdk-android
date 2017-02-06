@@ -9,8 +9,7 @@ For the SDK to work, the app needs the following (extra) permissions:
 * `BLUETOOTH`
 * `BLUETOOTH_ADMIN`
 * `RECEIVE_BOOT_COMPLETED`
-* `ACCESS_COARSE_LOCATION`  (api 23 / android 6 only)
-* `ACCESS_FINE_LOCATION` (for geofences)
+* `ACCESS_FINE_LOCATION`  (api 23 / android 6 only - for beacons and geofences)
 
 How these permissions impact installation and use of the app differs per android version and per targeted API of the app.
 
@@ -20,7 +19,7 @@ How these permissions impact installation and use of the app differs per android
 
 >Installs and updates for the these apps are done without asking for permissions. 
 
->Permissions are asked during use of the app. In the "read more" section, it is mentioned that the app “shares location” because of the extra COARSE\_LOCATION / FINE\_LOCATION permission requirement.
+>Permissions are asked during use of the app. In the "read more" section, it is mentioned that the app “shares location” because of the extra FINE\_LOCATION permission requirement.
 
 >And in the "permission details" menu, it is mentioned that the app can use bluetooth functionaties and run at startup. However this list must requested by the user and is not shown upon install by default.
 
