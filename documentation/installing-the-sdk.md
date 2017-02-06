@@ -17,12 +17,12 @@ Now include:
 
 ```groovy
 dependencies {
-	compile('com.inbeacon:android.sdk:1.+@aar'){ transitive = true }
+	compile('com.inbeacon:android.sdk:2.+@aar'){ transitive = true }
 }
 ```
 to your gradle dependencies. See bintray for details: [https://bintray.com/inbeacon/maven/android.sdk/view](https://bintray.com/inbeacon/maven/android.sdk/view)
 
-You can use a dynamic version (1.+) to get the latest 1.x version of the SDK (recommended) 
+You can use a dynamic version (2.+) to get the latest 2.x version of the SDK (recommended) 
 >Don't forget transitive = true. Because we specify @aar, transitive no longer defaults to true
 
 ### Binary release 
@@ -38,9 +38,12 @@ repositories {
    }
 }
 
-compile 'com.android.support:support-v4:22.2.0'
-compile 'org.altbeacon:android-beacon-library:2.8.1'
-compile 'com.loopj.android:android-async-http:1.4.9'
+compile 'com.android.support:support-v4:25.0.0'         
+compile 'com.inbeacon:android-beacon-library:2.9.118'
+compile 'com.google.code.gson:gson:2.8.0'
+compile 'com.squareup.okhttp3:okhttp:3.4.2'
+compile 'com.squareup.okhttp3:logging-interceptor:3.4.2'
+compile 'com.google.android.gms:play-services-location:10.0.1'
 compile(name:'android.sdk-release', ext:'aar')
 ```
 

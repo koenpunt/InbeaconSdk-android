@@ -1,16 +1,18 @@
 # Using the SDK
 ## InbeaconManager class
 
-This is the main manager class that does all the heavy lifting. Notice that the inbeaconApplication class handles all initialisations of the InbeaconManagerclass. 
+This is the main class that you communicate with.
 
-### initialize()
-Initialize the SDK with your credentials. This will create a singleton instance that is always accessible using `InbeaconManager.getSharedInstance()` 
+### initialize() 
+Initialize the SDK with your credentials. This will create a singleton instance and starts the SDK. 
+Always call initialize from the Application class.
+
 
 ```java
 static InbeaconManagerInterface initialize(Context context, String clientId, String clientSecret)
 ```
 Initialize the SDK with your clientID and clientSecret. These credentials are used for communication with the server.
-You can find your client-ID and client-Secret in your [account overview](http://console.inbeacon.nl/accmgr) 
+You can find your client-ID and client-Secret in your [account overview](https://console.inbeacon.nl/account) 
 
 >Example:
 >Initialize the SDK in your Appliction object in the `onCreate` method as follows:
@@ -28,87 +30,55 @@ public class myApp extends Application {
 ```
 
 
-### getSharedInstance()
+> For older devices with API level <=18 the initialization will be silently ignored. The inBeacon SDK is disabled for these API levels.
+
+### getInstance() 
 Retrieves the shared InbeaconManager singleton class 
 
 ```java
-static InbeaconManagerInterface getSharedInstance();
+static InbeaconManagerInterface getInstance();
+static InbeaconManagerInterface getSharedInstance(); // backward compatibility
 ```
->Example: At any moment it is possible to obtain the inBeaconManager class, for instance from an Activity:
+>Example: At any moment it is possible to obtain the inBeaconManager instance, for example within an Activity:
 >
 ```java
 ...
-InbeaconManager inbManager = InbeaconManager.getSharedInstance();
-inbManager.attachUser(user);
+InbeaconManager inbManager = InbeaconManager.getInstance();
+userPropertyService = inbManager.getUserPropertyService();
 ```
 
-### attachUser()
+
+### getUserPropertyService() - access user properties and tags
 
 ```java
-void attachUser(HashMap<String, String> user);
+UserPropertyService getUserPropertyService();
 ```
+Returns an instance of the UserPropertyService which allow user properties to be managed. See UserPropertyService description below.
 
-The inBeacon backend has user information for each device. The user information are properties that fall in any of the 2 categories:
-
-* Fixed properties. These always exist and control specific functionality. These are the fixed properties
-  - `name`: Full user name, both first and family name. Example ‘Dwight Schulz’
-  - `email`: User email. Example: ‘dwight@a-team.com’
-  - `gender`: User gender: male, female or unknown
-  - `country`: ISO3166 country code
-  - `id`: inBeacon unique user id (read-only)
-  - `avatar`: URL to user avatar
-
-* Custom properties. You can define other properties, like "facebook-ID" or “age”
-
->Example:
+### setLogLevel
+In order to get more logging, the loglevel might be increased. The level is Log.NONE by default, so no logging is shown.
+ 
+```java
+void setLogLevel(long level);
+// any of the standard levels: Log.WARNING Log.INFO Log.DEBUG Log.ERROR Log.VERBOSE  
+```
+>Example: it is possible to increase the loglevel before initialisation
 >
 ```java
-HashMap<String, String> user=new HashMap<String, String>(); 
-user.put("name","Dwight Schulz");
-user.put("email","dwight@ateam.com");
-InbeaconManager.getSharedInstance().attachUser(user);
+...
+InbeaconManager.getInstance().setContext(this).setLogLevel(Log.INFO);
+InbeaconManager.getInstance().setCredentials("client-id", "client-secret");   
+InbeaconManager.getInstance().start();  // and we're off
 ```
 
-You can also call AttachUser from any other class, for instance from the main acitivity using the shared instance.
+### getLogLevel
+returns the current log level
+
+    long getLogLevel();
 
 
-### detachUser()
-Removes all local device user properties.
-
-```java
-void detachUser();
-```
-
-Log out the current current user. From now only anonymous info is send to inBeacon server.
-
->Example:
->
-```java
-InbeaconManager.getSharedInstance().detachUser();
-```
-
-### refresh()
-This starts all services and obtains new information from the server. You should call Refresh every once in a while to make sure server information is updated.
-
-```java
-    void refresh();
-```
-
-Obtain fresh trigger and region information from the inBeacon platform. Best practice is to call this when the app is 
-
-* started
-
-* returned to the foreground
-
-so info is kept updated. 
-
->Example:
->
-```java
-	InbeaconManager.getSharedInstance().refresh();
-```
 	
-### verifyCapabilities()</td>
+### verifyCapabilities
 Checks for correct hardware and SDK version.
 
 ```java
@@ -126,7 +96,7 @@ VerifiedCapability.CAP_BLUETOOTH_LE_NOT_AVAILABLE
 ```
 
 ### askPermissions(Activity activity)
-Convenience method to ask COARSE_LOCATION permissions for SDK 23, needed for the use of beacons
+Convenience method to ask FINE_LOCATION permissions for SDK 23, needed for the use of beacons and geofences
 (safe to call with SDK 22 and lower, in this case it does nothing)
 
 ```java
@@ -135,8 +105,70 @@ Convenience method to ask COARSE_LOCATION permissions for SDK 23, needed for the
 
 See example code if you want to roll your own.
 
+### refresh() - obsolete
+This starts all services and obtains new information from the server. 
 
->SDK 22 and older - proguard warnings
+```java
+    void refresh();  // now obsolete. Done automatically
+```
+
+
+
+## UserPropertyService
+
+The inBeacon backend has user information for each device. The user information are properties that fall in any of the 3 categories:
+
+* Fixed properties. These always exist and control specific functionality. These are the fixed properties
+  - `name`: Full user name, both first and family name. Example ‘Dwight Schulz’
+  - `email`: User email. Example: ‘dwight@a-team.com’
+  - `gender`: User gender: male, female or unknown
+  - `country`: ISO3166 country code
+  - `id`: inBeacon unique user id (read-only)
+  - `avatar`: URL to user avatar
+
+* Custom properties. You can define other properties, like "facebook-ID" or "my-ID". Properties can be String, long, double or boolean type.
+
+* Tags. Users can be tagged, a tag us a string that can be set or reset.
+
+User properties are **persistent** on the device, and also **automatically synchronized with the backend** and thus will **survive an app re-install** (on both iOS and Android)
+
+Replication with the backend works both ways: Local updates are send to the server, server updates are send to the app. Because the device initiates the communication, updates from server to device do not occur immediately but will have to wait until the device starts the next communication cycle.
+
+> Note: Properties cannot be removed once created. Tags can be reset, which removes the tag.
+
+
+>Example:
+>
+```java
+userPropertyService.putPropertyString("name", "Dwight Schulz");
+userPropertyService.putPropertyLong("age", 55);
+String name=userPropertyService.getPropertyString("name");
+```
+
+available methods
+
+```java
+    boolean hasProperty(String property);
+
+    String getPropertyString(String property, String defaultValue);
+    String getPropertyString(String property);
+    void putPropertyString(String property, String value);
+
+    long getPropertyLong(String property, long defaultValue);
+    long getPropertyLong(String property);
+    void putPropertyLong(String property, long value);
+
+    double getPropertyDouble(String property, double defaultValue);
+    double getPropertyDouble(String property);
+    void putPropertyDouble(String property, double value);
+
+    boolean hasTag(String tag);
+    void setTag(String tag);
+    void resetTag(String tag);
+```
+
+
+### SDK 22 and older - proguard warnings
 
 >If you generate apk’s with proguard with TargetSDK 22 or lower, you need to disable warnings for the new permission checks. Add the following line to your proguard-rules.pro file:
 >
@@ -151,8 +183,9 @@ See example code if you want to roll your own.
 The inBeacon event mechanism uses a LocalBroadcastManager and intents with actions. To listen to specific events, you need to create an intentfilter and a MessageReceiver like this: 
 
 ```java
-IntentFilter myIntentFilter=new IntentFilter("com.inbeacon.sdk.event.enterregion");
-
+import com.inbeacon.sdk.Base.Constants;
+...
+IntentFilter myIntentFilter=new IntentFilter(Constants.LocalBroadcasts.EVENT_PROXIMITY);
 LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,myIntentFilter);
 ```
 The messageReceiver class can be defined like this:
@@ -166,22 +199,7 @@ The messageReceiver class can be defined like this:
         }
     };
 ```
-also you could include more than one inbeacon event in the intentfilter to receive more than one action, like this (this intentfilter listens to all available inbeacon messages):
 
-```java
-IntentFilter myIntentFilter=new IntentFilter();
-
-myIntentFilter.addAction("com.inbeacon.sdk.event.enterregion");     // user entered a region
-myIntentFilter.addAction("com.inbeacon.sdk.event.exitregion");      // user left a region
-myIntentFilter.addAction("com.inbeacon.sdk.event.enterlocation");   // user entered a location
-myIntentFilter.addAction("com.inbeacon.sdk.event.exitlocation");    // user left a location
-myIntentFilter.addAction("com.inbeacon.sdk.event.regionsupdate");   // region definitions were updated
-myIntentFilter.addAction("com.inbeacon.sdk.event.enterproximity");  // user entered a beacon proximity
-myIntentFilter.addAction("com.inbeacon.sdk.event.exitproximity");   // user left a beacon proximity
-myIntentFilter.addAction("com.inbeacon.sdk.event.proximity");       // low level proximity update, once every second when beacons are around
-myIntentFilter.addAction("com.inbeacon.sdk.event.appevent");        // defined in the backend for special app-specific pages to show
-myIntentFilter.addAction("com.inbeacon.sdk.event.appaction");       // defined in the backend to handle your own local notifications
-```
 >Example:
 >
 ```java
@@ -199,68 +217,64 @@ public class sdkTest extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sdk_test);
         IntentFilter myIntentFilter=new IntentFilter();
-        myIntentFilter.addAction("com.inbeacon.sdk.event.appaction");
+        myIntentFilter.addAction(Contants.LocalBroadcasts.EVENT_APPEVENT);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,myIntentFilter);
     }
 }
 ```
 
-### com.inbeacon.sdk.event.enterregion
-Fired when device enters a region 
+### EVENT_APPEVENT
 
-* intent Extras: region information
+It is possible to have inBeacon fire a trigger that uses the app logic to handle the Activity that is activated when the user opens the notification. 
 
-### com.inbeacon.sdk.event.exitregion
+intent Extras: 
 
-Fired when device leaves a region 
+*  EVENT\_APPEVENT\_EXTRADATA\_ARGUMENT - app argument given in backend. Can be any string (or json)
 
-* intent Extras: region information
-
-### com.inbeacon.sdk.event.enterlocation
-
-Fired when device enters a location 
-
-* intent Extras: location information
-
-### com.inbeacon.sdk.event.exitlocation
-
-Fired when device leaves a location 
-
-* intent Extras: location information
-
-### com.inbeacon.sdk.event.enterproximity
-
-Fired when device enters a beacon proximity 
-
-* intent Extra: Beacon and proximity information (distance to beacon)
-
-### com.inbeacon.sdk.event.leaveproximity
-
-Fired when device leaves a beacon proximity
-
-* intent Extra: Beacon and proximity information (distance to beacon)
-
-
-### com.inbeacon.sdk.event.proximity
-
->Low level beacon proximity event.
-
-Fired when device proximity to a defined Beacon changes. This event is normally fired once every second when a beacon is in range
-
-* intent Extras: Beacon information and proximity to beacon (near/far/immediate)
-
-### com.inbeacon.sdk.event.regionsupdate
-
-Fired when the region definition has been retrieved and updated from the server
-
-* intent Extras: none.
-
-### com.inbeacon.sdk.event.appevent
-
-Special case: It is possible to have inBeacon fire a trigger that uses the app logic to handle the Activity that is activated when the user enters the notification. 
-
-* intent Extras: Page information from this trigger with app-argument given in the backend:
 
 ![image alt text](image_4.png)
+
+### EVENT\_USERINFO
+fired when a user property has been changed. 
+
+intent Extras:
+
+* EVENT\_USERINFO\_EXTRADATA\_PROPERTY - property name
+* EVENT\_USERINFO\_EXTRADATA\_SOURCE - "SERVER" or "DEVICE" - party responsible for change
+
+### EVENT\_LOCATION
+
+Fired when device enters or leaves a location. Normally you don't need to filter this event. Special use cases only. 
+
+intent Extras:
+
+* EVENT\_PROXIMITY\_EXTRADATA\_LOCATION - location id
+* EVENT\_PROXIMITY\_EXTRADATA\_INOUT - "i" or "o" - enter or exit
+
+
+### EVENT\_PROXIMITY
+
+Fired when device enters or leaves a beacon proximity. Normally you don't need to filter this event. Special use cases only. 
+
+intent Extras: 
+
+* EVENT\_PROXIMITY\_EXTRADATA\_BEACON - beacon id
+* EVENT\_PROXIMITY\_EXTRADATA\_PROXIMITY - near/far/immediate
+* EVENT\_PROXIMITY\_EXTRADATA\_INOUT - "i" or "o" - enter or exit
+
+### EVENT\_GEOFENCE
+
+Fired when a device enters or leaves a geofence. Normally you don't need to filter this event. Special use cases only. 
+
+intent Extras:
+
+* EVENT\_GEOFENCE\_EXTRADATA\_FENCEID - geofence id
+* EVENT\_GEOFENCE\_EXTRADATA\_INOUT - "i" or "o" - enter or exit
+
+
+
+
+
+
 
 ---
