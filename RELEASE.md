@@ -1,3 +1,3 @@
-#### 2.0.3 (07-Feb-2017)
-- some issues for older android versions fixed (Adnroid 5 and lower)
+#### 2.0.4 (07-Feb-2017)
+- some issues for older (pre-SDK23) versions fixed
  
