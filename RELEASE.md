@@ -1,3 +1,3 @@
-#### 2.0.4 (07-Feb-2017)
-- some issues for older (pre-SDK23) versions fixed
- 
+#### 2.0.5 (16-Feb-2017)
+- dependency update with upstream altbeacon 2.9.2 
+
