@@ -168,14 +168,23 @@ available methods
 ```
 
 
-### SDK 22 and older - proguard warnings
+### Proguard warnings
 
+#### Okio warnings
+The square/okio dependency contains some references to classes that are not used when not available. However they can result in proguard warnings that can be safely ignored. Add the following line to your proguard-rules.pro file:
+
+```
+-dontwarn okio.**
+```
+
+#### Only for SDK 22 and older
 >If you generate apk’s with proguard with TargetSDK 22 or lower, you need to disable warnings for the new permission checks. Add the following line to your proguard-rules.pro file:
 >
 ```
 # inbeacon
 -dontwarn com.inbeacon.sdk.**
 ```
+
 
 
 ## Receiving inBeaconSDK events 
