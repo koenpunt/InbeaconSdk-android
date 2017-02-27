@@ -50,3 +50,7 @@ compile(name:'android.sdk-release', ext:'aar')
 In this case you need to specify some dependencies by hand.
 
 Now you are set to go. Try to compile and see that your app is still working. Now you need to add some code to start the inBeacon SDK.
+
+### Proguard rules
+
+The SDK proguard rules are automatically merged into your project.
