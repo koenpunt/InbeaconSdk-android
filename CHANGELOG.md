@@ -1,3 +1,7 @@
+#### 2.0.8 (18-Apr-2017)
+- Get new gps fix when entering beacon region for accurate context.
+ 
+
 #### 2.0.7 (18-Apr-2017)
 - catched null intent on apiservice
 - catched exception in message.toString
