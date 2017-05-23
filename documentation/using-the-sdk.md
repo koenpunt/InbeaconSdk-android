@@ -167,6 +167,54 @@ available methods
     void resetTag(String tag);
 ```
 
+## Sending custom events or touchpoints
+
+The SDK supports custom events that can be used for (examples)
+
+* custom spot types that generate events just like beacons or geofences
+* other types of events, for instance certain user actions inside the app
+
+Different event-types are supported:
+
+- eventtype **ONESHOT**. For unrelated events, a oneshot event is not connected to other events, and no time-spend is calculated.
+- eventtype **IN** and **OUT**. For in/out eventtypes, a time-spend is calculated for example to measure dwell times. Also the in and out events are connected and kept for "currently in" and "currently not in" status calculation based on the eventID. A device can be inside more than one eventID at the same time.
+
+Custom events can be used in the campaign designer and are stored as touchpoints and can be used in touchpoint analysis.
+
+A custom event has 3 properties:
+
+- an ID. The eventID should be defined in the inbeacon backend, otherwise triggering it will be ignored.
+- an eventType, which can be IN, OUT or ONESHOT. (see com.inbeacon.sdk.Custom.EventType)
+- (optional) extra data. This is a string with extra data for custom purposes to give more context.
+
+### Triggering (sending) a custom event
+There are 2 ways to trigger a custom event: Via an SDK method or with a local broadcast.
+
+##### via an SDK method: triggerCustomEvent()
+
+```java
+void triggerCustomEvent(long eventId, EventType eventType, String extra) 
+```
+>Example: 
+>
+```java
+import com.inbeacon.sdk.Custom.EventType;
+...
+InbeaconManager.getInstance().triggerCustomEvent(44L, EventType.ONESHOT, "some info");
+```
+
+##### via a local broadcast
+>Example:
+>
+```
+import com.inbeacon.sdk.Base.Constants;
+...
+Intent localIntent = new Intent(Constants.LocalBroadcasts.EVENT_CUSTOMEVENT);
+localIntent.putExtra(Constants.LocalBroadcasts. EVENT_CUSTOMEVENT_EXTRADATA_EVENTID, 44L);  // long ID
+localIntent.putExtra(Constants.LocalBroadcasts. EVENT_CUSTOMEVENT_EXTRADATA_EVENTTYPE, EventType.IN.name());
+localIntent.putExtra(Constants.LocalBroadcasts. EVENT_CUSTOMEVENT_EXTRADATA_EXTRA, "extrastuff");
+LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(localIntent);
+```
 
 
 ## Receiving inBeaconSDK events 
