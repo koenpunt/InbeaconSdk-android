@@ -1,3 +1,7 @@
+#### 2.1.2 (21-Jun-2017)
+- Google play services conflict resolved. 
+ 
+
 #### 2.1.0 (23-May-2017)
 - support for custom events
 - don't restart BLE periodically if the library confrims device can detect duplicate advertisements in a single scan, leading to more reliable detections with short scan cycles
