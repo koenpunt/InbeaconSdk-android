@@ -128,7 +128,7 @@ The inBeacon backend has user information for each device. The user information 
 
 * Custom properties. You can define other properties, like "facebook-ID" or "my-ID". Properties can be String, long, double or boolean type.
 
-* Tags. Users can be tagged, a tag us a string that can be set or reset.
+* Tags. Users can be tagged, a tag is a string that can be set or reset.
 
 User properties are **persistent** on the device, and also **automatically synchronized with the backend** and thus will **survive an app re-install** (on both iOS and Android)
 
